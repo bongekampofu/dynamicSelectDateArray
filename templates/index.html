@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+
+<title>Available Tickets</title>
+</head>
+<body>
+  <h1>Select a Date</h1>
+  <input type="date" name="book_date" id="book_date">
+
+  <h3>Remaining Tickets</h3>
+  <ul id="available"></ul>
+<script>
+     //1st code - disable previous dates
+    var today = new Date().toISOString().split('T')[0];
+    // Set the minimum selectable date to today
+    document.getElementById("book_date").setAttribute("min", today);
+//2nd code
+const date_select = document.getElementById('book_date');
+const cavailable = document.getElementById('available')
+date_select.addEventListener('change', function(event){
+   let cdate = event.currentTarget.value
+   try {
+     fetch(`/available/${cdate}`)
+     .then(response => response.json())
+     .then(function(data){
+       let valueHTML = '';
+       data.tickets.forEach(ticket => {
+           //valueHTML += `${ticket.id} ${ticket.quantity}`
+           valueHTML += `${ticket.quantity}`
+       });
+       cavailable.innerHTML = valueHTML
+     });
+   } catch (error) {
+     console.log(error)
+   }
+})
+</script>
+</body>
+</html>
